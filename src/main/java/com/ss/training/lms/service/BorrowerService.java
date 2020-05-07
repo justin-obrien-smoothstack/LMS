@@ -18,15 +18,33 @@ import com.ss.training.lms.entity.BookLoan;
 import com.ss.training.lms.entity.Borrower;
 import com.ss.training.lms.jdbc.ConnectionUtil;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
 public class BorrowerService {
-    public ConnectionUtil connUtil = new ConnectionUtil();
+    
+    @Autowired
+    ConnectionUtil connUtil;
+
+    @Autowired
+    BookLoanDAO bookLoanDAO;
+
+    @Autowired
+    BorrowerDAO borDAO;
+
+    // This variable could be named better
+    @Autowired
+    BookCopiesDAO entriesDAO;
+
+    @Autowired
+    BookDAO bookDAO;
 
     public Borrower getBorrower(Integer cardNo) throws SQLException {
         Connection conn = null;
         try {
             conn = connUtil.getConnection();
-            BorrowerDAO borDAO = new BorrowerDAO(conn);
-            List<Borrower> borrowerList = borDAO.readABorrower(cardNo);
+            List<Borrower> borrowerList = borDAO.readABorrower(cardNo, conn);
             if(borrowerList.size() == 0) {
                 return null;
             }
@@ -45,8 +63,7 @@ public class BorrowerService {
         Connection conn = null;
         try {
             conn = connUtil.getConnection();
-            BookLoanDAO loansDAO = new BookLoanDAO(conn);
-            List<BookLoan> loans = loansDAO.readAllLoansFromABorrower(cardNo);
+            List<BookLoan> loans = bookLoanDAO.readAllLoansFromABorrower(cardNo, conn);
             if(loans.size() == 0) {
                 return null;
             }
@@ -65,23 +82,21 @@ public class BorrowerService {
         Connection conn = null;
         try {
             conn = connUtil.getConnection();
-            BookLoanDAO loansDAO = new BookLoanDAO(conn);
-            BookCopiesDAO entriesDAO = new BookCopiesDAO(conn);
 
             // Add the book to the copies table
-            List<BookCopies> entries = entriesDAO.readAnEntry(loan.getBranchId(), loan.getBookId());
+            List<BookCopies> entries = entriesDAO.readAnEntry(loan.getBranchId(), loan.getBookId(), conn);
             if (entries.size() == 0) {
                 BookCopies entry = new BookCopies(loan.getBookId(), loan.getBranchId(), 1);
-                entriesDAO.addBookCopiesEntry(entry);
+                entriesDAO.addBookCopiesEntry(entry, conn);
             } else if (entries.size() > 0){
                 BookCopies entry = new BookCopies(loan.getBookId(), loan.getBranchId(), (entries.get(0).getNoOfCopies() + 1));
-                entriesDAO.updateBookCopiesEntry(entry);
+                entriesDAO.updateBookCopiesEntry(entry, conn);
             }
 
             Timestamp now = Timestamp.from(Instant.now());
             loan.setDateIn(now);
             
-            loansDAO.updateBookLoan(loan);
+            bookLoanDAO.updateBookLoan(loan, conn);
             conn.commit();
             return true;
         } catch (ClassNotFoundException | SQLException e) {
@@ -99,10 +114,9 @@ public class BorrowerService {
         Connection conn = null;
         try {
             conn = connUtil.getConnection();
-            BookDAO bookDAO = new BookDAO(conn);
             List<Book> books = new ArrayList<>();
             for(BookLoan loan: loans) {
-                books.add(bookDAO.readABookById(loan.getBookId()).get(0));
+                books.add(bookDAO.readABookById(loan.getBookId(), conn).get(0));
             }
             return books;
         } catch ( SQLException e) {
@@ -119,13 +133,11 @@ public class BorrowerService {
         Connection conn = null;
         try {
             conn = connUtil.getConnection();
-            BookLoanDAO loansDAO = new BookLoanDAO(conn);
-            BookCopiesDAO entriesDAO = new BookCopiesDAO(conn);
 
             // Add the book to the copies table
-            List<BookCopies> entries = entriesDAO.readAnEntry(branchId, bookId);
+            List<BookCopies> entries = entriesDAO.readAnEntry(branchId, bookId, conn);
             BookCopies entry = new BookCopies(bookId, branchId, (entries.get(0).getNoOfCopies() - 1));
-            entriesDAO.updateBookCopiesEntry(entry);
+            entriesDAO.updateBookCopiesEntry(entry, conn);
             
             LocalDateTime weekFromNow = LocalDateTime.now().plusDays(7);
             Timestamp weekFromNowTS = Timestamp.valueOf(weekFromNow);
@@ -133,7 +145,7 @@ public class BorrowerService {
 
             BookLoan loan = new BookLoan(bookId, branchId, cardNo, now, weekFromNowTS, null);
             
-            loansDAO.addBookLoan(loan);
+            bookLoanDAO.addBookLoan(loan, conn);
             conn.commit();
             return true;
         } catch (ClassNotFoundException | SQLException e) {

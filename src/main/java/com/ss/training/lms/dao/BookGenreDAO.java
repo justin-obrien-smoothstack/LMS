@@ -12,11 +12,8 @@ import com.ss.training.lms.entity.BookGenre;
 
 @Component
 public class BookGenreDAO extends BaseDAO<BookGenre> {
-    public BookGenreDAO(Connection conn) {
-        super(conn);
-    }
 
-    public void addBookGenreEntry(BookGenre bookGenre) throws ClassNotFoundException, SQLException{
+	public void addBookGenreEntry(BookGenre bookGenre) throws ClassNotFoundException, SQLException{
 		System.out.println("Genre ID" + bookGenre.getGenre_id());
 		System.out.println("Book ID" + bookGenre.getBookId());
 		save("INSERT INTO tbl_book_genres (genre_id, bookId) VALUES (?, ?)", new Object[] {bookGenre.getGenre_id(), bookGenre.getBookId()});

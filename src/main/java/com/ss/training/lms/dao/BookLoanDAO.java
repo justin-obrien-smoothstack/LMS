@@ -12,9 +12,6 @@ import com.ss.training.lms.entity.BookLoan;
 
 @Component
 public class BookLoanDAO extends BaseDAO<BookLoan> {
-    public BookLoanDAO(Connection conn) {
-        super(conn);
-    }
 
     public void addBookLoan(BookLoan loan) throws ClassNotFoundException, SQLException{
 		save("INSERT INTO tbl_book_loans (bookId, branchId, cardNo, dateOut, dueDate, dateIn) VALUES (?, ?, ?, ?, ?, ?)", new Object[] {loan.getBookId(), loan.getBranchId(), loan.getCardNo(), loan.getDateOut(), loan.getDueDate(), loan.getDateIn()});

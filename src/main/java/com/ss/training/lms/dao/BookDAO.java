@@ -12,9 +12,6 @@ import com.ss.training.lms.entity.Book;
 
 @Component
 public class BookDAO extends BaseDAO<Book> {
-    public BookDAO(Connection conn) {
-        super(conn);
-    }
 
     public Integer addBook(Book book) throws ClassNotFoundException, SQLException {
         return saveWithPK("INSERT INTO tbl_book (title, pubId) VALUES (?, ?)", new Object[] { book.getTitle(), book.getPublisherId() });

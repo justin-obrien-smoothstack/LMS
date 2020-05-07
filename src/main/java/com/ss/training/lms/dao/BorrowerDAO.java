@@ -12,9 +12,6 @@ import com.ss.training.lms.entity.Borrower;
 
 @Component
 public class BorrowerDAO extends BaseDAO<Borrower> {
-    public BorrowerDAO(Connection conn) {
-        super(conn);
-    }
 
     public Integer addBorrower(Borrower borrower) throws ClassNotFoundException, SQLException {
         return saveWithPK("INSERT INTO tbl_borrower (name, address, phone) VALUES (?, ?, ?)", new Object[] { borrower.getName(), borrower.getAddress(), borrower.getPhone() });

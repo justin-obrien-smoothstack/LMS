@@ -21,7 +21,7 @@ public class AdminAuthorService {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			Integer primaryKey = authorDAO.addAuthor(author);
+			Integer primaryKey = authorDAO.addAuthor(author, conn);
 			conn.commit();
 			return primaryKey;
 		} catch (ClassNotFoundException | SQLException e) {
@@ -40,7 +40,7 @@ public class AdminAuthorService {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			authorDAO.deleteAuthor(author);
+			authorDAO.deleteAuthor(author, conn);
 			conn.commit();
 		} catch (ClassNotFoundException | SQLException e) {
 			System.out.println("We could not delete that author.");
@@ -56,7 +56,7 @@ public class AdminAuthorService {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			authorDAO.updateAuthor(author);
+			authorDAO.updateAuthor(author, conn);
 			conn.commit();
 		} catch (ClassNotFoundException | SQLException e) {
 			System.out.println("We could not update that author.");
@@ -72,7 +72,7 @@ public class AdminAuthorService {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			List<Author> authors = authorDAO.readAnAuthor(authorId);
+			List<Author> authors = authorDAO.readAnAuthor(authorId, conn);
 			if (authors.size() == 0) {
 				return null;
 			}
@@ -92,7 +92,7 @@ public class AdminAuthorService {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			List<Author> authors = authorDAO.readAllAuthors();
+			List<Author> authors = authorDAO.readAllAuthors(conn);
 			if (authors.size() == 0) {
 				return null;
 			}

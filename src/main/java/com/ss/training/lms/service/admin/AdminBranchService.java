@@ -27,7 +27,7 @@ public class AdminBranchService {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			Integer primaryKey = branchDAO.addBranch(branch);
+			Integer primaryKey = branchDAO.addBranch(branch, conn);
 			conn.commit();
 			return primaryKey;
 		} catch (ClassNotFoundException | SQLException e) {
@@ -46,9 +46,9 @@ public class AdminBranchService {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			loanDAO.deleteBookLoansByBranch(branch.getBranchId());
-			copiesDAO.deleteBookLoansByBranch(branch.getBranchId());
-			branchDAO.deleteBranch(branch);
+			loanDAO.deleteBookLoansByBranch(branch.getBranchId(), conn);
+			copiesDAO.deleteBookLoansByBranch(branch.getBranchId(), conn);
+			branchDAO.deleteBranch(branch, conn);
 			conn.commit();
 		} catch (ClassNotFoundException | SQLException e) {
 			System.out.println("We could not delete that branch.");
@@ -64,7 +64,7 @@ public class AdminBranchService {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			branchDAO.updateBranch(branch);
+			branchDAO.updateBranch(branch, conn);
 			conn.commit();
 		} catch (ClassNotFoundException | SQLException e) {
 			System.out.println("We could not update that branch.");
@@ -80,7 +80,7 @@ public class AdminBranchService {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			List<LibraryBranch> branches = branchDAO.readABranch(branchId);
+			List<LibraryBranch> branches = branchDAO.readABranch(branchId, conn);
 			if (branches.size() == 0) {
 				return null;
 			}
@@ -100,7 +100,7 @@ public class AdminBranchService {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			List<LibraryBranch> branches = branchDAO.readAllBranches();
+			List<LibraryBranch> branches = branchDAO.readAllBranches(conn);
 			if (branches.size() == 0) {
 				return null;
 			}

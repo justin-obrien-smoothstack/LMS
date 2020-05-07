@@ -24,7 +24,7 @@ public class AdminPublisherService {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			Integer primaryKey = pubDAO.addPublisher(publisher);
+			Integer primaryKey = pubDAO.addPublisher(publisher, conn);
 			conn.commit();
 			return primaryKey;
 		} catch (ClassNotFoundException | SQLException e) {
@@ -43,8 +43,8 @@ public class AdminPublisherService {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			bookDAO.deleteBooksByPublisher(publisher.getPublisherID());
-			pubDAO.deletePublisher(publisher);
+			bookDAO.deleteBooksByPublisher(publisher.getPublisherID(), conn);
+			pubDAO.deletePublisher(publisher, conn);
 			conn.commit();
 		} catch (ClassNotFoundException | SQLException e) {
 			System.out.println("We could not delete that publisher.");
@@ -60,7 +60,7 @@ public class AdminPublisherService {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			pubDAO.updatePublisher(publisher);
+			pubDAO.updatePublisher(publisher, conn);
 			conn.commit();
 		} catch (ClassNotFoundException | SQLException e) {
 			System.out.println("We could not update that publisher.");
@@ -76,7 +76,7 @@ public class AdminPublisherService {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			List<Publisher> publishers = pubDAO.readAPublisher(pubId);
+			List<Publisher> publishers = pubDAO.readAPublisher(pubId, conn);
 			if (publishers.size() == 0) {
 				return null;
 			}
@@ -96,7 +96,7 @@ public class AdminPublisherService {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			List<Publisher> publishers = pubDAO.readAllPublishers();
+			List<Publisher> publishers = pubDAO.readAllPublishers(conn);
 			if (publishers.size() == 0) {
 				return null;
 			}

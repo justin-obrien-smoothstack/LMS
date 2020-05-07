@@ -1,24 +1,32 @@
 package com.ss.training.lms.service.admin;
 
-import com.ss.training.lms.jdbc.ConnectionUtil;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ss.training.lms.dao.BookCopiesDAO;
 import com.ss.training.lms.dao.BookLoanDAO;
 import com.ss.training.lms.dao.LibraryBranchDAO;
 import com.ss.training.lms.entity.LibraryBranch;
+import com.ss.training.lms.jdbc.ConnectionUtil;
 
 public class AdminBranchService {
 	
+	@Autowired
 	ConnectionUtil connUtil;
+	@Autowired
+	LibraryBranchDAO branchDAO;
+	@Autowired
+	BookCopiesDAO copiesDAO;
+	@Autowired
+	BookLoanDAO loanDAO;
 
 	public Integer addABranch(LibraryBranch branch) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			LibraryBranchDAO branchDAO = new LibraryBranchDAO(conn);
 			Integer primaryKey = branchDAO.addBranch(branch);
 			conn.commit();
 			return primaryKey;
@@ -38,10 +46,7 @@ public class AdminBranchService {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			LibraryBranchDAO branchDAO = new LibraryBranchDAO(conn);
-			BookLoanDAO loanDAO = new BookLoanDAO(conn);
 			loanDAO.deleteBookLoansByBranch(branch.getBranchId());
-			BookCopiesDAO copiesDAO = new BookCopiesDAO(conn);
 			copiesDAO.deleteBookLoansByBranch(branch.getBranchId());
 			branchDAO.deleteBranch(branch);
 			conn.commit();
@@ -59,7 +64,6 @@ public class AdminBranchService {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			LibraryBranchDAO branchDAO = new LibraryBranchDAO(conn);
 			branchDAO.updateBranch(branch);
 			conn.commit();
 		} catch (ClassNotFoundException | SQLException e) {
@@ -76,7 +80,6 @@ public class AdminBranchService {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			LibraryBranchDAO branchDAO = new LibraryBranchDAO(conn);
 			List<LibraryBranch> branches = branchDAO.readABranch(branchId);
 			if (branches.size() == 0) {
 				return null;
@@ -97,7 +100,6 @@ public class AdminBranchService {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			LibraryBranchDAO branchDAO = new LibraryBranchDAO(conn);
 			List<LibraryBranch> branches = branchDAO.readAllBranches();
 			if (branches.size() == 0) {
 				return null;

@@ -1,24 +1,30 @@
 package com.ss.training.lms.service.admin;
 
-import com.ss.training.lms.jdbc.ConnectionUtil;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.ss.training.lms.dao.BookDAO;
 import com.ss.training.lms.dao.PublisherDAO;
 import com.ss.training.lms.entity.Publisher;
+import com.ss.training.lms.jdbc.ConnectionUtil;
 
 public class AdminPublisherService {
 	
+	@Autowired
 	ConnectionUtil connUtil;
+	@Autowired
+	PublisherDAO pubDAO;
+	@Autowired
+	BookDAO bookDAO;
 
 	public Integer addAPublisher(Publisher publisher) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			PublisherDAO borDAO = new PublisherDAO(conn);
-			Integer primaryKey = borDAO.addPublisher(publisher);
+			Integer primaryKey = pubDAO.addPublisher(publisher);
 			conn.commit();
 			return primaryKey;
 		} catch (ClassNotFoundException | SQLException e) {
@@ -37,8 +43,6 @@ public class AdminPublisherService {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			PublisherDAO pubDAO = new PublisherDAO(conn);
-			BookDAO bookDAO = new BookDAO(conn);
 			bookDAO.deleteBooksByPublisher(publisher.getPublisherID());
 			pubDAO.deletePublisher(publisher);
 			conn.commit();
@@ -56,8 +60,7 @@ public class AdminPublisherService {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			PublisherDAO borDAO = new PublisherDAO(conn);
-			borDAO.updatePublisher(publisher);
+			pubDAO.updatePublisher(publisher);
 			conn.commit();
 		} catch (ClassNotFoundException | SQLException e) {
 			System.out.println("We could not update that publisher.");
@@ -73,8 +76,7 @@ public class AdminPublisherService {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			PublisherDAO borDAO = new PublisherDAO(conn);
-			List<Publisher> publishers = borDAO.readAPublisher(pubId);
+			List<Publisher> publishers = pubDAO.readAPublisher(pubId);
 			if (publishers.size() == 0) {
 				return null;
 			}
@@ -94,8 +96,7 @@ public class AdminPublisherService {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			PublisherDAO borDAO = new PublisherDAO(conn);
-			List<Publisher> publishers = borDAO.readAllPublishers();
+			List<Publisher> publishers = pubDAO.readAllPublishers();
 			if (publishers.size() == 0) {
 				return null;
 			}

@@ -1,22 +1,26 @@
 package com.ss.training.lms.service.admin;
 
-import com.ss.training.lms.jdbc.ConnectionUtil;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.ss.training.lms.dao.AuthorDAO;
 import com.ss.training.lms.entity.Author;
+import com.ss.training.lms.jdbc.ConnectionUtil;
 
 public class AdminAuthorService {
 	
+	@Autowired
 	ConnectionUtil connUtil;
+	@Autowired
+	AuthorDAO authorDAO;
 	
 	public Integer addAuthor(Author author) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			AuthorDAO authorDAO = new AuthorDAO(conn);
 			Integer primaryKey = authorDAO.addAuthor(author);
 			conn.commit();
 			return primaryKey;
@@ -36,7 +40,6 @@ public class AdminAuthorService {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			AuthorDAO authorDAO = new AuthorDAO(conn);
 			authorDAO.deleteAuthor(author);
 			conn.commit();
 		} catch (ClassNotFoundException | SQLException e) {
@@ -53,7 +56,6 @@ public class AdminAuthorService {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			AuthorDAO authorDAO = new AuthorDAO(conn);
 			authorDAO.updateAuthor(author);
 			conn.commit();
 		} catch (ClassNotFoundException | SQLException e) {
@@ -70,7 +72,6 @@ public class AdminAuthorService {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			AuthorDAO authorDAO = new AuthorDAO(conn);
 			List<Author> authors = authorDAO.readAnAuthor(authorId);
 			if (authors.size() == 0) {
 				return null;
@@ -91,7 +92,6 @@ public class AdminAuthorService {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			AuthorDAO authorDAO = new AuthorDAO(conn);
 			List<Author> authors = authorDAO.readAllAuthors();
 			if (authors.size() == 0) {
 				return null;

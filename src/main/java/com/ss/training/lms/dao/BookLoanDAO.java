@@ -14,31 +14,31 @@ import com.ss.training.lms.entity.BookLoan;
 public class BookLoanDAO extends BaseDAO<BookLoan> {
 
     public void addBookLoan(BookLoan loan, Connection conn) throws ClassNotFoundException, SQLException{
-		save("INSERT INTO tbl_book_loans (bookId, branchId, cardNo, dateOut, dueDate, dateIn) VALUES (?, ?, ?, ?, ?, ?)", new Object[] {loan.getBookId(), loan.getBranchId(), loan.getCardNo(), loan.getDateOut(), loan.getDueDate(), loan.getDateIn()});
+		save("INSERT INTO tbl_book_loans (bookId, branchId, cardNo, dateOut, dueDate, dateIn) VALUES (?, ?, ?, ?, ?, ?)", new Object[] {loan.getBookId(), loan.getBranchId(), loan.getCardNo(), loan.getDateOut(), loan.getDueDate(), loan.getDateIn()}, conn);
 	}
 
 	public void updateBookLoan(BookLoan loan, Connection conn)  throws ClassNotFoundException, SQLException{
-		save("UPDATE tbl_book_loans SET dueDate = ?, dateIn = ? WHERE bookId = ? AND branchId = ? AND cardNo = ?", new Object[] {loan.getDueDate(), loan.getDateIn(), loan.getBookId(), loan.getBranchId(), loan.getCardNo()});
+		save("UPDATE tbl_book_loans SET dueDate = ?, dateIn = ? WHERE bookId = ? AND branchId = ? AND cardNo = ?", new Object[] {loan.getDueDate(), loan.getDateIn(), loan.getBookId(), loan.getBranchId(), loan.getCardNo()}, conn);
 	}
 
 	public void deleteBookLoan(BookLoan loan, Connection conn)  throws ClassNotFoundException, SQLException{
-		save("DELETE FROM tbl_book_loans WHERE bookId = ? AND branchId = ? AND cardNo = ?", new Object[]{loan.getBookId(), loan.getBranchId(), loan.getBranchId()});
+		save("DELETE FROM tbl_book_loans WHERE bookId = ? AND branchId = ? AND cardNo = ?", new Object[]{loan.getBookId(), loan.getBranchId(), loan.getBranchId()}, conn);
 	}
 
 	public void deleteBookLoansByBorrower(Integer borrowerCard, Connection conn)  throws ClassNotFoundException, SQLException{
-		save("DELETE FROM tbl_book_loans WHERE cardNo = ?", new Object[]{borrowerCard});
+		save("DELETE FROM tbl_book_loans WHERE cardNo = ?", new Object[]{borrowerCard}, conn);
 	}
 
 	public void deleteBookLoansByBranch(Integer branchId, Connection conn)  throws ClassNotFoundException, SQLException{
-		save("DELETE FROM tbl_book_loans WHERE branchId = ?", new Object[]{branchId});
+		save("DELETE FROM tbl_book_loans WHERE branchId = ?", new Object[]{branchId}, conn);
 	}
 	
 	public List<BookLoan> readAllLoans(Connection conn) throws ClassNotFoundException, SQLException{
-		return read("SELECT * FROM tbl_book_loans", null);
+		return read("SELECT * FROM tbl_book_loans", null, conn);
 	}
 	
 	public List<BookLoan> readAllLoansFromABorrower(Integer cardNo, Connection conn) throws ClassNotFoundException, SQLException{
-		return read("SELECT * FROM tbl_book_loans WHERE cardNo = ? AND dateIn IS NULL", new Object[] {cardNo});
+		return read("SELECT * FROM tbl_book_loans WHERE cardNo = ? AND dateIn IS NULL", new Object[] {cardNo}, conn);
     }
 
     @Override

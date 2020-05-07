@@ -11,7 +11,7 @@ import com.ss.training.lms.dao.LibraryBranchDAO;
 import com.ss.training.lms.entity.LibraryBranch;
 
 public class AdminBranchService {
-    public ConnectionUtil connUtil = new ConnectionUtil();
+    ConnectionUtil connUtil;
     
     public Integer addABranch(LibraryBranch branch) throws SQLException {
         Connection conn = null;

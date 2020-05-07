@@ -10,7 +10,7 @@ import com.ss.training.lms.dao.PublisherDAO;
 import com.ss.training.lms.entity.Publisher;
 
 public class AdminPublisherService {
-    public ConnectionUtil connUtil = new ConnectionUtil();
+	ConnectionUtil connUtil;
     
     public Integer addAPublisher(Publisher publisher) throws SQLException {
         Connection conn = null;

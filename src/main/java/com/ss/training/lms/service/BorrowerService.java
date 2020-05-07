@@ -116,7 +116,7 @@ public class BorrowerService {
             conn = connUtil.getConnection();
             List<Book> books = new ArrayList<>();
             for(BookLoan loan: loans) {
-                books.add(bookDAO.readABookById(loan.getBookId()).get(0), conn);
+                books.add(bookDAO.readABookById(loan.getBookId(), conn).get(0));
             }
             return books;
         } catch ( SQLException e) {

@@ -13,32 +13,32 @@ import com.ss.training.lms.entity.Book;
 @Component
 public class BookDAO extends BaseDAO<Book> {
 
-    public Integer addBook(Book book) throws ClassNotFoundException, SQLException {
+    public Integer addBook(Book book, Connection conn) throws ClassNotFoundException, SQLException {
         return saveWithPK("INSERT INTO tbl_book (title, pubId) VALUES (?, ?)", new Object[] { book.getTitle(), book.getPublisherId() });
     }
 
-    public void updateBook(Book book) throws ClassNotFoundException, SQLException {
+    public void updateBook(Book book, Connection conn) throws ClassNotFoundException, SQLException {
         save("UPDATE tbl_book SET title = ? WHERE pubId = ?",
                 new Object[] { book.getTitle(), book.getPublisherId() });
     }
 
-    public void deleteBook(Book book) throws ClassNotFoundException, SQLException {
+    public void deleteBook(Book book, Connection conn) throws ClassNotFoundException, SQLException {
         save("DELETE FROM tbl_book WHERE bookId = ?", new Object[] { book.getBookId() });
     }
 
-    public void deleteBooksByPublisher(Integer pubId) throws ClassNotFoundException, SQLException {
+    public void deleteBooksByPublisher(Integer pubId, Connection conn) throws ClassNotFoundException, SQLException {
         save("DELETE FROM tbl_book WHERE pubId = ?", new Object[] { pubId });
     }
 
-    public List<Book> readAllBooks() throws ClassNotFoundException, SQLException {
+    public List<Book> readAllBooks(Connection conn) throws ClassNotFoundException, SQLException {
         return read("SELECT * FROM tbl_book", null);
     }
 
-    public List<Book> readAllBooksWithSearch(String search) throws SQLException {
+    public List<Book> readAllBooksWithSearch(String search, Connection conn) throws SQLException {
         return read("SELECT * FROM tbl_book WHERE title LIKE ?;", new Object[] {true, search });
     }
 
-    public List<Book> readABookById(Integer bookId) throws SQLException {
+    public List<Book> readABookById(Integer bookId, Connection conn) throws SQLException {
         return read("SELECT * FROM tbl_book WHERE bookId = ?;", new Object[] { bookId });
     }
 

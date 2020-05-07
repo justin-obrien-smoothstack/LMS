@@ -13,24 +13,24 @@ import com.ss.training.lms.entity.Borrower;
 @Component
 public class BorrowerDAO extends BaseDAO<Borrower> {
 
-    public Integer addBorrower(Borrower borrower) throws ClassNotFoundException, SQLException {
+    public Integer addBorrower(Borrower borrower, Connection conn) throws ClassNotFoundException, SQLException {
         return saveWithPK("INSERT INTO tbl_borrower (name, address, phone) VALUES (?, ?, ?)", new Object[] { borrower.getName(), borrower.getAddress(), borrower.getPhone() });
     }
 
-    public void updateBorrower(Borrower borrower) throws ClassNotFoundException, SQLException {
+    public void updateBorrower(Borrower borrower, Connection conn) throws ClassNotFoundException, SQLException {
         save("UPDATE tbl_borrower SET name = ?, address = ?, phone = ? WHERE cardNo = ?",
                 new Object[] { borrower.getName(), borrower.getAddress(), borrower.getPhone(), borrower.getCardNo() } );
     }
 
-    public void deleteBorrower(Borrower borrower) throws ClassNotFoundException, SQLException {
+    public void deleteBorrower(Borrower borrower, Connection conn) throws ClassNotFoundException, SQLException {
         save("DELETE FROM tbl_borrower WHERE cardNo = ?", new Object[] { borrower.getCardNo() });
     }
 
-    public List<Borrower> readAllBorrowers() throws ClassNotFoundException, SQLException {
+    public List<Borrower> readAllBorrowers(Connection conn) throws ClassNotFoundException, SQLException {
         return read("SELECT * FROM tbl_borrower", null);
     }
 
-    public List<Borrower> readABorrower(Integer cardNo) throws SQLException {
+    public List<Borrower> readABorrower(Integer cardNo, Connection conn) throws SQLException {
         return read("SELECT * FROM tbl_borrower WHERE cardNo = ?;", new Object[] { cardNo });
     }
 

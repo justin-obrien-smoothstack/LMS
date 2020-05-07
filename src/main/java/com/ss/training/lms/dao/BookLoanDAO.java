@@ -13,31 +13,31 @@ import com.ss.training.lms.entity.BookLoan;
 @Component
 public class BookLoanDAO extends BaseDAO<BookLoan> {
 
-    public void addBookLoan(BookLoan loan) throws ClassNotFoundException, SQLException{
+    public void addBookLoan(BookLoan loan, Connection conn) throws ClassNotFoundException, SQLException{
 		save("INSERT INTO tbl_book_loans (bookId, branchId, cardNo, dateOut, dueDate, dateIn) VALUES (?, ?, ?, ?, ?, ?)", new Object[] {loan.getBookId(), loan.getBranchId(), loan.getCardNo(), loan.getDateOut(), loan.getDueDate(), loan.getDateIn()});
 	}
 
-	public void updateBookLoan(BookLoan loan)  throws ClassNotFoundException, SQLException{
+	public void updateBookLoan(BookLoan loan, Connection conn)  throws ClassNotFoundException, SQLException{
 		save("UPDATE tbl_book_loans SET dueDate = ?, dateIn = ? WHERE bookId = ? AND branchId = ? AND cardNo = ?", new Object[] {loan.getDueDate(), loan.getDateIn(), loan.getBookId(), loan.getBranchId(), loan.getCardNo()});
 	}
 
-	public void deleteBookLoan(BookLoan loan)  throws ClassNotFoundException, SQLException{
+	public void deleteBookLoan(BookLoan loan, Connection conn)  throws ClassNotFoundException, SQLException{
 		save("DELETE FROM tbl_book_loans WHERE bookId = ? AND branchId = ? AND cardNo = ?", new Object[]{loan.getBookId(), loan.getBranchId(), loan.getBranchId()});
 	}
 
-	public void deleteBookLoansByBorrower(Integer borrowerCard)  throws ClassNotFoundException, SQLException{
+	public void deleteBookLoansByBorrower(Integer borrowerCard, Connection conn)  throws ClassNotFoundException, SQLException{
 		save("DELETE FROM tbl_book_loans WHERE cardNo = ?", new Object[]{borrowerCard});
 	}
 
-	public void deleteBookLoansByBranch(Integer branchId)  throws ClassNotFoundException, SQLException{
+	public void deleteBookLoansByBranch(Integer branchId, Connection conn)  throws ClassNotFoundException, SQLException{
 		save("DELETE FROM tbl_book_loans WHERE branchId = ?", new Object[]{branchId});
 	}
 	
-	public List<BookLoan> readAllLoans() throws ClassNotFoundException, SQLException{
+	public List<BookLoan> readAllLoans(Connection conn) throws ClassNotFoundException, SQLException{
 		return read("SELECT * FROM tbl_book_loans", null);
 	}
 	
-	public List<BookLoan> readAllLoansFromABorrower(Integer cardNo) throws ClassNotFoundException, SQLException{
+	public List<BookLoan> readAllLoansFromABorrower(Integer cardNo, Connection conn) throws ClassNotFoundException, SQLException{
 		return read("SELECT * FROM tbl_book_loans WHERE cardNo = ? AND dateIn IS NULL", new Object[] {cardNo});
     }
 

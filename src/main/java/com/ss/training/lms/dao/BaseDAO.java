@@ -7,15 +7,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
 
+@Component
 public abstract class BaseDAO<T> {
-    public Connection conn = null;
-
-    public BaseDAO(Connection conn){
-        this.conn = conn;
-    }
-
-    public void save(String sql, Object[] vals) throws ClassNotFoundException, SQLException {
+    
+    public void save(String sql, Object[] vals, Connection conn) throws ClassNotFoundException, SQLException {
         PreparedStatement pstmt = conn.prepareStatement(sql);
 
         if(vals!=null){
@@ -28,7 +25,7 @@ public abstract class BaseDAO<T> {
         pstmt.executeUpdate();
     }
 
-    public Integer saveWithPK(String sql, Object[] vals) throws ClassNotFoundException, SQLException{
+    public Integer saveWithPK(String sql, Object[] vals, Connection conn) throws ClassNotFoundException, SQLException{
 		PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 		if(vals!=null){
 			int index =1;
@@ -51,7 +48,7 @@ public abstract class BaseDAO<T> {
         return autoIncKeyFromApi;
 	}
 
-    public List<T> read(String sql, Object[] vals) throws SQLException {
+    public List<T> read(String sql, Object[] vals, Connection conn) throws SQLException {
         PreparedStatement pstmt = conn.prepareStatement(sql);
 
         if(vals!=null) {

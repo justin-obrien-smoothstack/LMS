@@ -9,28 +9,25 @@ import java.util.List;
 import com.ss.training.lms.entity.Genre;
 
 public class GenreDAO extends BaseDAO<Genre> {
-    public GenreDAO(Connection conn) {
-        super(conn);
-    }
 
-    public Integer addGenre(Genre genre) throws ClassNotFoundException, SQLException {
-		return saveWithPK("INSERT INTO tbl_genre (genre_name) VALUES (?)", new Object[] {genre.getGenreName()});
+    public Integer addGenre(Genre genre, Connection conn) throws ClassNotFoundException, SQLException {
+		return saveWithPK("INSERT INTO tbl_genre (genre_name) VALUES (?)", new Object[] {genre.getGenreName()}, conn);
 	}
 
-	public void updateGenre(Genre genre) throws ClassNotFoundException, SQLException {
-		save("UPDATE tbl_genre SET genre_name = ? WHERE genre_id = ?", new Object[] {genre.getGenreName(), genre.getGenreID()});
+	public void updateGenre(Genre genre, Connection conn) throws ClassNotFoundException, SQLException {
+		save("UPDATE tbl_genre SET genre_name = ? WHERE genre_id = ?", new Object[] {genre.getGenreName(), genre.getGenreID()}, conn);
 	}
 
-	public void deleteGenre(Genre genre)  throws ClassNotFoundException, SQLException {
-		save("DELETE FROM tbl_genre WHERE genre_id = ?", new Object[]{ genre.getGenreID() });
+	public void deleteGenre(Genre genre, Connection conn)  throws ClassNotFoundException, SQLException {
+		save("DELETE FROM tbl_genre WHERE genre_id = ?", new Object[]{ genre.getGenreID() }, conn);
 	}
 	
-	public List<Genre> readAllGenres() throws ClassNotFoundException, SQLException{
-		return read("SELECT * FROM tbl_genre", null);
+	public List<Genre> readAllGenres(Connection conn) throws ClassNotFoundException, SQLException{
+		return read("SELECT * FROM tbl_genre", null, conn);
 	}
 
-	public List<Genre> readAGenre(Integer genreId) throws SQLException{
-		return read("SELECT * FROM tbl_genre WHERE genre_id = ?", new Object[]{ genreId });
+	public List<Genre> readAGenre(Integer genreId, Connection conn) throws SQLException{
+		return read("SELECT * FROM tbl_genre WHERE genre_id = ?", new Object[]{ genreId }, conn);
 	}
 
 	@Override

@@ -5,12 +5,14 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.ss.training.lms.dao.BookDAO;
 import com.ss.training.lms.dao.PublisherDAO;
 import com.ss.training.lms.entity.Publisher;
 import com.ss.training.lms.jdbc.ConnectionUtil;
 
+@Component
 public class AdminPublisherService {
 	
 	@Autowired

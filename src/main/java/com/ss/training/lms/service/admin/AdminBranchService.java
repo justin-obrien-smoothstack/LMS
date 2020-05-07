@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.ss.training.lms.dao.BookCopiesDAO;
 import com.ss.training.lms.dao.BookLoanDAO;
@@ -12,6 +13,7 @@ import com.ss.training.lms.dao.LibraryBranchDAO;
 import com.ss.training.lms.entity.LibraryBranch;
 import com.ss.training.lms.jdbc.ConnectionUtil;
 
+@Component
 public class AdminBranchService {
 	
 	@Autowired

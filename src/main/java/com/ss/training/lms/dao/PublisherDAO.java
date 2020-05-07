@@ -8,6 +8,9 @@ import java.util.List;
 
 import com.ss.training.lms.entity.Publisher;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class PublisherDAO extends BaseDAO<Publisher> {
 
 

@@ -6,8 +6,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.ss.training.lms.entity.Borrower;
 
+@Component
 public class BorrowerDAO extends BaseDAO<Borrower> {
     public BorrowerDAO(Connection conn) {
         super(conn);

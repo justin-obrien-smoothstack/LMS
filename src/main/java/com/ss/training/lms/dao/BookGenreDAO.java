@@ -6,8 +6,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.ss.training.lms.entity.BookGenre;
 
+@Component
 public class BookGenreDAO extends BaseDAO<BookGenre> {
     public BookGenreDAO(Connection conn) {
         super(conn);

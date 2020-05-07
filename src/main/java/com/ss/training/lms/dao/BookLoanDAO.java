@@ -5,8 +5,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.stereotype.Component;
+
 import com.ss.training.lms.entity.BookLoan;
 
+@Component
 public class BookLoanDAO extends BaseDAO<BookLoan> {
     public BookLoanDAO(Connection conn) {
         super(conn);

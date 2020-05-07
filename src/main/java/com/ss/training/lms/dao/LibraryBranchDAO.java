@@ -8,29 +8,28 @@ import java.util.List;
 
 import com.ss.training.lms.entity.LibraryBranch;
 
+
 public class LibraryBranchDAO extends BaseDAO<LibraryBranch>{
-    public LibraryBranchDAO(Connection conn) {
-        super(conn);
-    }
 
-    public Integer addBranch(LibraryBranch branch) throws ClassNotFoundException, SQLException {
-		return saveWithPK("INSERT INTO tbl_library_branch (branchName, branchAddress) VALUES (?, ?)", new Object[] {branch.getBranchName(), branch.getBranchAddress()});
+
+    public Integer addBranch(LibraryBranch branch, Connection conn) throws ClassNotFoundException, SQLException {
+		return saveWithPK("INSERT INTO tbl_library_branch (branchName, branchAddress) VALUES (?, ?)", new Object[] {branch.getBranchName(), branch.getBranchAddress()}, conn);
 	}
 
-	public void updateBranch(LibraryBranch branch) throws ClassNotFoundException, SQLException {
-		save("UPDATE tbl_library_branch SET branchName = ?, branchAddress = ? WHERE branchId = ?", new Object[] {branch.getBranchName(), branch.getBranchAddress(), branch.getBranchId()});
+	public void updateBranch(LibraryBranch branch, Connection conn) throws ClassNotFoundException, SQLException {
+		save("UPDATE tbl_library_branch SET branchName = ?, branchAddress = ? WHERE branchId = ?", new Object[] {branch.getBranchName(), branch.getBranchAddress(), branch.getBranchId()}, conn);
 	}
 
-	public void deleteBranch(LibraryBranch branch)  throws ClassNotFoundException, SQLException {
-		save("DELETE FROM tbl_library_branch WHERE branchId = ?", new Object[]{branch.getBranchId()});
+	public void deleteBranch(LibraryBranch branch, Connection conn)  throws ClassNotFoundException, SQLException {
+		save("DELETE FROM tbl_library_branch WHERE branchId = ?", new Object[]{branch.getBranchId()}, conn);
 	}
 	
-	public List<LibraryBranch> readAllBranches() throws ClassNotFoundException, SQLException{
-		return read("SELECT * FROM tbl_library_branch", null);
+	public List<LibraryBranch> readAllBranches(Connection conn) throws ClassNotFoundException, SQLException{
+		return read("SELECT * FROM tbl_library_branch", null, conn);
 	}
 
-	public List<LibraryBranch> readABranch(Integer branchId) throws SQLException{
-		return read("SELECT * FROM tbl_library_branch WHERE branchId = ?", new Object[]{ branchId });
+	public List<LibraryBranch> readABranch(Integer branchId, Connection conn) throws SQLException{
+		return read("SELECT * FROM tbl_library_branch WHERE branchId = ?", new Object[]{ branchId }, conn);
 	}
 
 	@Override

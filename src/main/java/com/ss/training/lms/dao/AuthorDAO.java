@@ -8,29 +8,29 @@ import java.util.List;
 
 import com.ss.training.lms.entity.Author;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class AuthorDAO extends BaseDAO<Author>{
-    public AuthorDAO(Connection conn) {
-        super(conn);
-    }
 
-    public Integer addAuthor(Author author) throws ClassNotFoundException, SQLException{
-		return saveWithPK("INSERT INTO tbl_author (authorName) VALUES (?)", new Object[] {author.getAuthorName()});
+    public Integer addAuthor(Author author, Connection conn) throws ClassNotFoundException, SQLException{
+		return saveWithPK("INSERT INTO tbl_author (authorName) VALUES (?)", new Object[] {author.getAuthorName()}, conn);
 	}
 
-	public void updateAuthor(Author author)  throws ClassNotFoundException, SQLException{
-		save("UPDATE tbl_author SET authorName = ? WHERE authorId = ?", new Object[] {author.getAuthorName(), author.getAuthorId()});
+	public void updateAuthor(Author author, Connection conn)  throws ClassNotFoundException, SQLException{
+		save("UPDATE tbl_author SET authorName = ? WHERE authorId = ?", new Object[] {author.getAuthorName(), author.getAuthorId()}, conn);
 	}
 
-	public void deleteAuthor(Author author)  throws ClassNotFoundException, SQLException{
-		save("DELETE FROM tbl_author WHERE authorId = ?", new Object[]{author.getAuthorId()});
+	public void deleteAuthor(Author author, Connection conn)  throws ClassNotFoundException, SQLException{
+		save("DELETE FROM tbl_author WHERE authorId = ?", new Object[]{author.getAuthorId()}, conn);
 	}
 	
-	public List<Author> readAllAuthors() throws ClassNotFoundException, SQLException{
-		return read("SELECT * FROM tbl_author", null);
+	public List<Author> readAllAuthors(Connection conn) throws ClassNotFoundException, SQLException{
+		return read("SELECT * FROM tbl_author", null, conn);
 	}
 
-	public List<Author> readAnAuthor(Integer authorId) throws ClassNotFoundException, SQLException{
-		return read("SELECT * FROM tbl_author WHERE authorId = ?", new Object[]{ authorId });
+	public List<Author> readAnAuthor(Integer authorId, Connection conn) throws ClassNotFoundException, SQLException{
+		return read("SELECT * FROM tbl_author WHERE authorId = ?", new Object[]{ authorId }, conn);
 	}
 
 	@Override

@@ -5,6 +5,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.ss.training.lms.dao.BookCopiesDAO;
 import com.ss.training.lms.dao.BookDAO;
 import com.ss.training.lms.dao.LibraryBranchDAO;
@@ -13,20 +16,36 @@ import com.ss.training.lms.entity.BookCopies;
 import com.ss.training.lms.entity.LibraryBranch;
 import com.ss.training.lms.jdbc.ConnectionUtil;
 
+@Component
 public class LibrarianService {
-    public ConnectionUtil connUtil = new ConnectionUtil();
+	@Autowired
+    public ConnectionUtil connUtil;
+	
+	@Autowired
+	LibraryBranchDAO libDAO;
+	
+	@Autowired
+	BookCopiesDAO entriesDAO;
 
+	@Autowired
+	BookDAO bookDAO;
+
+	/**
+	 * 
+	 * @param entry
+	 * @return
+	 * @throws SQLException
+	 */
     public boolean updateCopies(BookCopies entry) throws SQLException {
         Connection conn = null;
         try {
             conn = connUtil.getConnection();
-            BookCopiesDAO entriesDAO = new BookCopiesDAO(conn);
-            List<BookCopies> entries = entriesDAO.readAnEntry(entry.getBranchId(), entry.getBookId());
+            List<BookCopies> entries = entriesDAO.readAnEntry(entry.getBranchId(), entry.getBookId(), conn);
             if (entries.size() == 0) {
-                entriesDAO.addBookCopiesEntry(entry);
+                entriesDAO.addBookCopiesEntry(entry, conn);
             } else {
                 System.out.println("No Entry found!!!");
-                entriesDAO.updateBookCopiesEntry(entry); 
+                entriesDAO.updateBookCopiesEntry(entry, conn); 
             }
             conn.commit();
             return true;
@@ -41,12 +60,17 @@ public class LibrarianService {
 		}
     }
 
+    /**
+     * 
+     * @param branch
+     * @return
+     * @throws SQLException
+     */
     public boolean updateBranch(LibraryBranch branch) throws SQLException {
         Connection conn = null;
         try {
             conn = connUtil.getConnection();
-            LibraryBranchDAO libDAO = new LibraryBranchDAO(conn);
-            libDAO.updateBranch(branch);
+            libDAO.updateBranch(branch, conn);
             conn.commit();
             return true;
         } catch (ClassNotFoundException | SQLException e) {
@@ -60,12 +84,16 @@ public class LibrarianService {
 		}
     }
 
+    /**
+     * 
+     * @return
+     * @throws SQLException
+     */
     public List<LibraryBranch> getBranches() throws SQLException {
         Connection conn = null;
         try {
             conn = connUtil.getConnection();
-            LibraryBranchDAO libDAO = new LibraryBranchDAO(conn);
-            return libDAO.readAllBranches();
+            return libDAO.readAllBranches(conn);
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
             return null;
@@ -76,12 +104,17 @@ public class LibrarianService {
 		}
     }
 
+    /**
+     * 
+     * @param search
+     * @return
+     * @throws SQLException
+     */
     public List<Book> getBooksWithSearch(String search) throws SQLException {
         Connection conn = null;
         try {
             conn = connUtil.getConnection();
-            BookDAO bookDAO = new BookDAO(conn);
-            return bookDAO.readAllBooksWithSearch(search);
+            return bookDAO.readAllBooksWithSearch(search, conn);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
@@ -92,16 +125,22 @@ public class LibrarianService {
 		}
     }
 
+    /**
+     * 
+     * @param branchId
+     * @param bookId
+     * @return
+     * @throws SQLException
+     */
     public BookCopies getAnEntryOfBookCopies(Integer branchId, Integer bookId) throws SQLException {
         Connection conn = null;
         try {
             conn = connUtil.getConnection();
-            BookCopiesDAO entriesDAO = new BookCopiesDAO(conn);
-            List<BookCopies> entries = entriesDAO.readAnEntry(branchId, bookId);
+            List<BookCopies> entries = entriesDAO.readAnEntry(branchId, bookId, conn);
             if(entries.size() == 0) {
                 return null;
             }
-            return entriesDAO.readAnEntry(branchId, bookId).get(0);
+            return entriesDAO.readAnEntry(branchId, bookId, conn).get(0);
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
             return null;
@@ -112,19 +151,23 @@ public class LibrarianService {
 		}
     }
 
+    /**
+     * 
+     * @param branch
+     * @return
+     * @throws SQLException
+     */
     public List<Book> getBooksAtABranch(LibraryBranch branch) throws SQLException {
         Connection conn = null;
         try {
             conn = connUtil.getConnection();
-            BookCopiesDAO entriesDAO = new BookCopiesDAO(conn);
             List<Book> books = new ArrayList<>();
-            BookDAO bookDAO = new BookDAO(conn);
-            List<BookCopies> entries = entriesDAO.readBooksFromABranch(branch.getBranchId());
+            List<BookCopies> entries = entriesDAO.readBooksFromABranch(branch.getBranchId(), conn);
             if(entries.size() == 0) {
                 return null;
             }
             for(BookCopies entry: entries) {
-                books.add(bookDAO.readABookById(entry.getBookId()).get(0));
+                books.add(bookDAO.readABookById(entry.getBookId(), conn).get(0));
             }
             return books;
         } catch ( SQLException e) {

@@ -5,19 +5,36 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.ss.training.lms.dao.BookLoanDAO;
 import com.ss.training.lms.dao.BorrowerDAO;
 import com.ss.training.lms.entity.Borrower;
 
+@Component
 public class AdminBorrowerService {
-    public ConnectionUtil connUtil = new ConnectionUtil();
+	
+	@Autowired
+    ConnectionUtil connUtil;
+	
+	@Autowired
+    BorrowerDAO borDAO;
+	
+	@Autowired
+    BookLoanDAO loanDAO;
     
+	/**
+	 * 
+	 * @param borrower
+	 * @return
+	 * @throws SQLException
+	 */
     public Integer addABorrower(Borrower borrower) throws SQLException {
         Connection conn = null;
         try {
             conn = connUtil.getConnection();
-            BorrowerDAO borDAO = new BorrowerDAO(conn);
-            Integer primaryKey = borDAO.addBorrower(borrower);
+            Integer primaryKey = borDAO.addBorrower(borrower, conn);
             conn.commit();
             return primaryKey;
         } catch (ClassNotFoundException | SQLException e) {
@@ -32,14 +49,17 @@ public class AdminBorrowerService {
 		}
     }
 
+    /**
+     * 
+     * @param borrower
+     * @throws SQLException
+     */
     public void deleteABorrower(Borrower borrower) throws SQLException {
         Connection conn = null;
         try {
             conn = connUtil.getConnection();
-            BorrowerDAO borDAO = new BorrowerDAO(conn);
-            BookLoanDAO loanDAO = new BookLoanDAO(conn);
-            loanDAO.deleteBookLoansByBorrower(borrower.getCardNo());
-            borDAO.deleteBorrower(borrower);
+            loanDAO.deleteBookLoansByBorrower(borrower.getCardNo(), conn);
+            borDAO.deleteBorrower(borrower, conn);
             conn.commit();
         } catch (ClassNotFoundException | SQLException e) {
             System.out.println("We could not delete that borrower.");
@@ -51,12 +71,16 @@ public class AdminBorrowerService {
 		}
     }
 
+    /**
+     * 
+     * @param borrower
+     * @throws SQLException
+     */
     public void updateABorrower(Borrower borrower) throws SQLException {
         Connection conn = null;
         try {
             conn = connUtil.getConnection();
-            BorrowerDAO borDAO = new BorrowerDAO(conn);
-            borDAO.updateBorrower(borrower);
+            borDAO.updateBorrower(borrower, conn);
             conn.commit();
         } catch (ClassNotFoundException | SQLException e) {
             System.out.println("We could not update that borrower.");
@@ -68,12 +92,17 @@ public class AdminBorrowerService {
 		}
     }
 
+    /**
+     * 
+     * @param cardNo
+     * @return
+     * @throws SQLException
+     */
     public Borrower readABorrower(Integer cardNo) throws SQLException {
         Connection conn = null;
         try {
             conn = connUtil.getConnection();
-            BorrowerDAO borDAO = new BorrowerDAO(conn);
-            List<Borrower> borrowers = borDAO.readABorrower(cardNo);
+            List<Borrower> borrowers = borDAO.readABorrower(cardNo, conn);
             if(borrowers.size() == 0) {
                 return null;
             }
@@ -89,12 +118,16 @@ public class AdminBorrowerService {
 		}
     }
 
+    /**
+     * 
+     * @return
+     * @throws SQLException
+     */
     public List<Borrower> readAllBorrowers() throws SQLException {
         Connection conn = null;
         try {
             conn = connUtil.getConnection();
-            BorrowerDAO borDAO = new BorrowerDAO(conn);
-            List<Borrower> borrowers = borDAO.readAllBorrowers();
+            List<Borrower> borrowers = borDAO.readAllBorrowers(conn);
             if(borrowers.size() == 0) {
                 return null;
             }

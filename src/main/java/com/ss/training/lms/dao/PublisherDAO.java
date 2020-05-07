@@ -28,7 +28,7 @@ public class PublisherDAO extends BaseDAO<Publisher> {
 	}
 
 	public List<Publisher> readAPublisher(Integer publisherId,Connection conn) throws SQLException{
-		return read("SELECT * FROM tbl_publisher WHERE publisherId = ?", new Object[]{ publisherId ,conn});
+		return read("SELECT * FROM tbl_publisher WHERE publisherId = ?", new Object[]{ publisherId}, conn);
 	}
 
 	@Override

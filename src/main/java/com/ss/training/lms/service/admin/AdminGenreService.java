@@ -1,6 +1,10 @@
 package com.ss.training.lms.service.admin;
 
 import com.ss.training.lms.jdbc.ConnectionUtil;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -9,15 +13,22 @@ import com.ss.training.lms.dao.BookGenreDAO;
 import com.ss.training.lms.dao.GenreDAO;
 import com.ss.training.lms.entity.Genre;
 
+@Component
 public class AdminGenreService {
-    public ConnectionUtil connUtil = new ConnectionUtil();
+    @Autowired
+    GenreDAO genreDAO;
+
+    @Autowired 
+    BookGenreDAO bookGenreDAO;
+
+    @Autowired
+    ConnectionUtil connUtil;
     
     public Integer addAGenre(Genre genre) throws SQLException {
         Connection conn = null;
         try {
             conn = connUtil.getConnection();
-            GenreDAO genreDAO = new GenreDAO(conn);
-            Integer primaryKey = genreDAO.addGenre(genre);
+            Integer primaryKey = genreDAO.addGenre(genre, conn);
             conn.commit();
             return primaryKey;
         } catch (ClassNotFoundException | SQLException e) {
@@ -36,10 +47,8 @@ public class AdminGenreService {
         Connection conn = null;
         try {
             conn = connUtil.getConnection();
-            GenreDAO pubDAO = new GenreDAO(conn);
-            BookGenreDAO bookGenreDAO = new BookGenreDAO(conn);
-            bookGenreDAO.deleteGenresReferenceByGenre(genre.getGenreID());
-            pubDAO.deleteGenre(genre);
+            bookGenreDAO.deleteGenresReferenceByGenre(genre.getGenreID(), conn);
+            genreDAO.deleteGenre(genre, conn);
             conn.commit();
         } catch (ClassNotFoundException | SQLException e) {
             System.out.println("We could not delete that genre.");
@@ -55,8 +64,7 @@ public class AdminGenreService {
         Connection conn = null;
         try {
             conn = connUtil.getConnection();
-            GenreDAO genreDAO = new GenreDAO(conn);
-            genreDAO.updateGenre(genre);
+            genreDAO.updateGenre(genre, conn);
             conn.commit();
         } catch (ClassNotFoundException | SQLException e) {
             System.out.println("We could not update that genre.");
@@ -72,8 +80,7 @@ public class AdminGenreService {
         Connection conn = null;
         try {
             conn = connUtil.getConnection();
-            GenreDAO genreDAO = new GenreDAO(conn);
-            List<Genre> genres = genreDAO.readAGenre(genreId);
+            List<Genre> genres = genreDAO.readAGenre(genreId, conn);
             if(genres.size() == 0) {
                 return null;
             }
@@ -93,8 +100,7 @@ public class AdminGenreService {
         Connection conn = null;
         try {
             conn = connUtil.getConnection();
-            GenreDAO genreDAO = new GenreDAO(conn);
-            List<Genre> genres = genreDAO.readAllGenres();
+            List<Genre> genres = genreDAO.readAllGenres(conn);
             if(genres.size() == 0) {
                 return null;
             }

@@ -1,6 +1,10 @@
 package com.ss.training.lms.service.admin;
 
 import com.ss.training.lms.jdbc.ConnectionUtil;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -14,15 +18,26 @@ import com.ss.training.lms.entity.BookAuthor;
 import com.ss.training.lms.entity.BookGenre;
 import com.ss.training.lms.entity.Genre;
 
+@Component
 public class AdminBookService {
-    public ConnectionUtil connUtil = new ConnectionUtil();
+    @Autowired
+    ConnectionUtil connUtil;
+
+    @Autowired
+    BookDAO bookDAO;
+
+    @Autowired
+    BookGenreDAO bookGenreDAO;
+
+    @Autowired
+    BookAuthorDAO bookAuthorDAO;
+    
     
     public Integer addBook(Book book) throws SQLException {
         Connection conn = null;
         try {
             conn = connUtil.getConnection();
-            BookDAO bookDAO = new BookDAO(conn);
-            Integer primaryKey = bookDAO.addBook(book);
+            Integer primaryKey = bookDAO.addBook(book, conn);
             conn.commit();
             return primaryKey;
         } catch (ClassNotFoundException | SQLException e) {
@@ -41,16 +56,13 @@ public class AdminBookService {
         Connection conn = null;
         try {
             conn = connUtil.getConnection();
-
             // Add the book genre reference
-            BookGenreDAO bookGenreDAO = new BookGenreDAO(conn);
             BookGenre bookGenre = new BookGenre(genre.getGenreID(), book.getBookId());
-            bookGenreDAO.addBookGenreEntry(bookGenre);
+            bookGenreDAO.addBookGenreEntry(bookGenre, conn);
 
             // Add the author book reference
-            BookAuthorDAO bookAuthorDAO = new BookAuthorDAO(conn);
             BookAuthor bookAuthor = new BookAuthor(book.getBookId(), author.getAuthorId());
-            bookAuthorDAO.addBookAuthorEntry(bookAuthor);
+            bookAuthorDAO.addBookAuthorEntry(bookAuthor, conn);
         } catch (ClassNotFoundException | SQLException e) {
             System.out.println("We could not add that book.");
             e.printStackTrace();
@@ -68,8 +80,7 @@ public class AdminBookService {
         Connection conn = null;
         try {
             conn = connUtil.getConnection();
-            BookDAO bookDAO = new BookDAO(conn);
-            bookDAO.deleteBook(book);
+            bookDAO.deleteBook(book, conn);
             conn.commit();
         } catch (ClassNotFoundException | SQLException e) {
             System.out.println("We could not delete that book.");
@@ -85,8 +96,7 @@ public class AdminBookService {
         Connection conn = null;
         try {
             conn = connUtil.getConnection();
-            BookDAO bookDAO = new BookDAO(conn);
-            bookDAO.updateBook(book);
+            bookDAO.updateBook(book, conn);
             conn.commit();
         } catch (ClassNotFoundException | SQLException e) {
             System.out.println("We could not update that book.");
@@ -102,8 +112,7 @@ public class AdminBookService {
         Connection conn = null;
         try {
             conn = connUtil.getConnection();
-            BookDAO bookDAO = new BookDAO(conn);
-            List<Book> books = bookDAO.readABookById(bookId);
+            List<Book> books = bookDAO.readABookById(bookId, conn);
             if(books.size() == 0) {
                 return null;
             }
@@ -123,8 +132,7 @@ public class AdminBookService {
         Connection conn = null;
         try {
             conn = connUtil.getConnection();
-            BookDAO bookDAO = new BookDAO(conn);
-            List<Book> books = bookDAO.readAllBooks();
+            List<Book> books = bookDAO.readAllBooks(conn);
             if(books.size() == 0) {
                 return null;
             }

@@ -9,8 +9,9 @@ import com.ss.training.lms.dao.AuthorDAO;
 import com.ss.training.lms.entity.Author;
 
 public class AdminAuthorService {
+	
 	ConnectionUtil connUtil;
-
+	
 	public Integer addAuthor(Author author) throws SQLException {
 		Connection conn = null;
 		try {

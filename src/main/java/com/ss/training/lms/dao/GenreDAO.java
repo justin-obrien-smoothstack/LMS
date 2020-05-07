@@ -8,6 +8,9 @@ import java.util.List;
 
 import com.ss.training.lms.entity.Genre;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class GenreDAO extends BaseDAO<Genre> {
 
     public Integer addGenre(Genre genre, Connection conn) throws ClassNotFoundException, SQLException {

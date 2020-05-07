@@ -7,7 +7,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
 
+@Component
 public abstract class BaseDAO<T> {
     public Connection conn = null;
 

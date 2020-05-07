@@ -5,11 +5,14 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.ss.training.lms.dao.BookCopiesDAO;
 import com.ss.training.lms.dao.BookLoanDAO;
 import com.ss.training.lms.dao.LibraryBranchDAO;
 import com.ss.training.lms.entity.LibraryBranch;
 
+@Component
 public class AdminBranchService {
     public ConnectionUtil connUtil = new ConnectionUtil();
     

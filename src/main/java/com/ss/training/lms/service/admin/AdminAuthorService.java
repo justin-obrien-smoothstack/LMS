@@ -5,9 +5,12 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.ss.training.lms.dao.AuthorDAO;
 import com.ss.training.lms.entity.Author;
 
+@Component
 public class AdminAuthorService {
     public ConnectionUtil connUtil = new ConnectionUtil();
     
